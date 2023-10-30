@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from fixture.application import Application
 import pytest
-from contact import Contact
+from model.contact import Contact
 
 
 @pytest.fixture
@@ -12,8 +12,8 @@ def app(request):
 
 
 def test_create_contact(app):
-    app.login(user_name="admin", password="secret")
-    app.create_contact(Contact(first_name="Lucy",
+    app.session.login(user_name="admin", password="secret")
+    app.contact.create(Contact(first_name="Lucy",
                                middlename="Michelle",
                                lastname="Sunrise",
                                nickname="Lu",
@@ -38,5 +38,5 @@ def test_create_contact(app):
                                address2="some street next",
                                phone2="12",
                                notes="sun"))
-    app.logout()
+    app.session.logout()
 
