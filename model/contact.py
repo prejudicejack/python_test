@@ -28,3 +28,9 @@ class Contact:
         self.address2 = address2
         self.phone2 = phone2
         self.notes = notes
+
+
+class SelectContactByName:
+    def __init__(self, first_name, lastname):
+        self.first_name = first_name
+        self.lastname = lastname

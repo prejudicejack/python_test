@@ -3,3 +3,8 @@ class Group:
         self.name = name
         self.header = header
         self.footer = footer
+
+
+class SelectGroupByName:
+    def __init__(self, name):
+        self.name = name

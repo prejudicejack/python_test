@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
-from conftest import app
 
 
 def test_create_contact(app):
@@ -26,7 +25,7 @@ def test_create_contact(app):
                                anniversary_day="10",
                                anniversary_month="November",
                                anniversary_year="2000",
-                               selected_group="1",
+                               selected_group="test_group",
                                address2="some street next",
                                phone2="12",
                                notes="sun"))

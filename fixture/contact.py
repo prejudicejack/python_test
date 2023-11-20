@@ -12,6 +12,53 @@ class ContactHelper:
         # open new contact page
         wd.find_element(By.LINK_TEXT, "add new").click()
         # fill in form
+        self.fill_in_contact_info(contact)
+        # submit contact creation
+        wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
+        self.return_to_home_page()
+
+    def delete_first_contact(self):
+        wd = self.app.wd
+        # select first contact
+        wd.find_element(By.NAME, "selected[]").click()
+        # submit deletion
+        wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
+        wd.switch_to.alert.accept()
+
+    def delete_contact_by_name(self, selected_contact):
+        wd = self.app.wd
+        # select contact by First name and Last name
+        self.select_contact_by_title(selected_contact)
+        # submit deletion
+        wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
+        wd.switch_to.alert.accept()
+
+    def delete_all_contacts(self):
+        wd = self.app.wd
+        # select all contacts
+        wd.find_element(By.XPATH, "//form[@name='MainForm']/input[@onclick='MassSelection()']").click()
+        # submit deletion
+        wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
+        wd.switch_to.alert.accept()
+
+    def edit_first_contact(self, contact):
+        wd = self.app.wd
+        # modify first contact
+        wd.find_element(By.XPATH, "//a/img[@title='Details']").click()
+        wd.find_element(By.NAME, "modifiy").click()
+        # fill in form
+        self.fill_in_contact_info(contact)
+        # submit contact updating
+        wd.find_element(By.NAME, "update").click()
+        self.return_to_home_page()
+
+    def select_contact_by_title(self, selected_contact):
+        wd = self.app.wd
+        wd.find_element(By.XPATH,
+                        "//input[@title='Select (" + selected_contact.first_name + " " + selected_contact.lastname + ")']").click()
+
+    def fill_in_contact_info(self, contact):
+        wd = self.app.wd
         wd.find_element(By.NAME, "firstname").click()
         wd.find_element(By.NAME, "firstname").clear()
         wd.find_element(By.NAME, "firstname").send_keys(contact.first_name)
@@ -34,10 +81,8 @@ class ContactHelper:
         wd.find_element(By.NAME, "company").clear()
         wd.find_element(By.NAME, "company").send_keys(contact.company)
         wd.find_element(By.NAME, "address").click()
-        wd.find_element(By.NAME, "address").click()
         wd.find_element(By.NAME, "address").clear()
         wd.find_element(By.NAME, "address").send_keys(contact.address)
-        wd.find_element(By.NAME, "theform").click()
         wd.find_element(By.NAME, "home").click()
         wd.find_element(By.NAME, "home").clear()
         wd.find_element(By.NAME, "home").send_keys(contact.home_phone)
@@ -64,28 +109,25 @@ class ContactHelper:
         wd.find_element(By.NAME, "homepage").send_keys(contact.homepage)
         wd.find_element(By.NAME, "bday").click()
         Select(wd.find_element(By.NAME, "bday")).select_by_visible_text(contact.birthday_day)
-        wd.find_element(By.XPATH, "//option[@value='" + contact.birthday_day + "']").click()
+        wd.find_element(By.XPATH, "//select[1]/option[@value='" + contact.birthday_day + "']").click()
         wd.find_element(By.NAME, "bmonth").click()
         Select(wd.find_element(By.NAME, "bmonth")).select_by_visible_text(contact.birthday_month)
-        wd.find_element(By.XPATH, "//option[@value='" + contact.birthday_month + "']").click()
-        wd.find_element(By.NAME, "byear").click()
+        wd.find_element(By.XPATH, "//select[2]/option[@value='" + contact.birthday_month + "']").click()
         wd.find_element(By.NAME, "byear").click()
         wd.find_element(By.NAME, "byear").clear()
         wd.find_element(By.NAME, "byear").send_keys(contact.birthday_year)
         wd.find_element(By.NAME, "aday").click()
         Select(wd.find_element(By.NAME, "aday")).select_by_visible_text(contact.anniversary_day)
-        wd.find_element(By.XPATH,
-                        "//div[@id='content']/form/select[3]/option[@value='" + contact.anniversary_day + "']").click()
+        wd.find_element(By.XPATH, "//select[3]/option[@value='" + contact.anniversary_day + "']").click()
         wd.find_element(By.NAME, "amonth").click()
         Select(wd.find_element(By.NAME, "amonth")).select_by_visible_text(contact.anniversary_month)
-        wd.find_element(By.XPATH,
-                        "//div[@id='content']/form/select[4]/option[@value='" + contact.anniversary_month + "']").click()
+        wd.find_element(By.XPATH, "//select[4]/option[@value='" + contact.anniversary_month + "']").click()
         wd.find_element(By.NAME, "ayear").click()
         wd.find_element(By.NAME, "ayear").clear()
         wd.find_element(By.NAME, "ayear").send_keys(contact.anniversary_year)
         wd.find_element(By.NAME, "new_group").click()
         Select(wd.find_element(By.NAME, "new_group")).select_by_visible_text(contact.selected_group)
-        wd.find_element(By.XPATH, "//div[@id='content']/form/select[5]/option[text()='" + contact.selected_group + "']").click()
+        wd.find_element(By.XPATH, "//select[5]/option[text()='" + contact.selected_group + "']").click()
         wd.find_element(By.NAME, "address2").click()
         wd.find_element(By.NAME, "address2").clear()
         wd.find_element(By.NAME, "address2").send_keys(contact.address2)
@@ -95,9 +137,6 @@ class ContactHelper:
         wd.find_element(By.NAME, "notes").click()
         wd.find_element(By.NAME, "notes").clear()
         wd.find_element(By.NAME, "notes").send_keys(contact.notes)
-        # submit contact creation
-        wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
-        self.return_to_home_page()
 
     def return_to_home_page(self):
         wd = self.app.wd
