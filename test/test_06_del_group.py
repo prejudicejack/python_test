@@ -10,5 +10,11 @@ def test_delete_first_group(app):
 
 def test_delete_group_by_title(app):
     app.session.login(user_name="admin", password="secret")
-    app.group.delete_group_by_title(SelectGroupByName(name="test_group"))
+    app.group.delete_group_by_title(SelectGroupByName(name="some name"))
+    app.session.logout()
+
+
+def test_delete_all_groups(app):
+    app.session.login(user_name="admin", password="secret")
+    app.group.delete_all_groups()
     app.session.logout()

@@ -25,8 +25,8 @@ def test_edit_first_contact(app):
                                            anniversary_day="3",
                                            anniversary_month="March",
                                            anniversary_year="2007",
-                                           selected_group="test_group",
                                            address2="some street next 255",
                                            phone2="546464345",
                                            notes="self"))
     app.session.logout()
+

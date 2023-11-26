@@ -39,6 +39,15 @@ class GroupHelper:
         wd.find_element(By.NAME, "delete").click()
         self.return_to_groups_page()
 
+    def delete_all_groups(self):
+        wd = self.app.wd
+        self.open_groups_page()
+        # select group by title
+        self.select_all_groups()
+        # submit deletion
+        wd.find_element(By.NAME, "delete").click()
+        self.return_to_groups_page()
+
     def edit_first_group(self, group):
         wd = self.app.wd
         self.open_groups_page()
@@ -69,6 +78,12 @@ class GroupHelper:
         wd = self.app.wd
         wd.find_element(By.XPATH, "//div[@id='content']/form/span/input[@title='Select ("
                         + selected_group.name + ")']").click()
+
+    def select_all_groups(self):
+        wd = self.app.wd
+        checkboxes = wd.find_elements(By.XPATH, "//input[@type='checkbox']")
+        for checkbox in checkboxes:
+            checkbox.click()
 
     def fill_in_group_info(self, group):
         wd = self.app.wd

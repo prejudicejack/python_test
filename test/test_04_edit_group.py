@@ -12,5 +12,5 @@ def test_edit_first_group(app):
 def test_edit_group_by_title(app):
     app.session.login(user_name="admin", password="secret")
     app.group.edit_group_by_title(Group(name="some name", header="some header", footer="some footer"),
-                                  SelectGroupByName(name="123"))
+                                  SelectGroupByName(name="test_group"))
     app.session.logout()
