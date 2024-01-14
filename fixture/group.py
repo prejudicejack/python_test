@@ -24,54 +24,46 @@ class GroupHelper:
     def delete_first_group(self):
         wd = self.app.wd
         self.open_groups_page()
-        # select first group
-        wd.find_element(By.NAME, "selected[]").click()
-        # submit deletion
-        wd.find_element(By.NAME, "delete").click()
+        self.select_first_group()
+        self.submit_group_deletion()
         self.return_to_groups_page()
 
     def delete_group_by_title(self, selected_group):
         wd = self.app.wd
         self.open_groups_page()
-        # select group by title
         self.select_group_by_title(selected_group)
-        # submit deletion
-        wd.find_element(By.NAME, "delete").click()
+        self.submit_group_deletion()
         self.return_to_groups_page()
 
     def delete_all_groups(self):
         wd = self.app.wd
         self.open_groups_page()
-        # select group by title
         self.select_all_groups()
-        # submit deletion
+        self.submit_group_deletion()
+        self.return_to_groups_page()
+
+    def submit_group_deletion(self):
+        wd = self.app.wd
         wd.find_element(By.NAME, "delete").click()
-        self.return_to_groups_page()
 
-    def edit_first_group(self, group):
+    def edit_all_fields_in_first_group(self, group):
         wd = self.app.wd
         self.open_groups_page()
-        # select first group
-        wd.find_element(By.NAME, "selected[]").click()
-        # open selected group page for edition
-        wd.find_element(By.NAME, "edit").click()
+        self.select_first_group()
+        self.open_modification_form()
         # change data in fields
         self.fill_in_group_info(group)
-        # submit update
-        wd.find_element(By.NAME, "update").click()
+        self.submit_form_update()
         self.return_to_groups_page()
 
-    def edit_group_by_title(self, group, selected_group):
+    def edit_all_fields_in_group_selected_by_title(self, group, selected_group):
         wd = self.app.wd
         self.open_groups_page()
-        # select group by title
         self.select_group_by_title(selected_group)
-        # open selected group page for edition
-        wd.find_element(By.NAME, "edit").click()
+        self.open_modification_form()
         # change data in fields
         self.fill_in_group_info(group)
-        # submit update
-        wd.find_element(By.NAME, "update").click()
+        self.submit_form_update()
         self.return_to_groups_page()
 
     def select_group_by_title(self, selected_group):
@@ -85,17 +77,40 @@ class GroupHelper:
         for checkbox in checkboxes:
             checkbox.click()
 
+    def modify_first_group(self, new_group_data):
+        wd = self.app.wd
+        self.open_groups_page()
+        self.select_first_group()
+        self.open_modification_form()
+        # change data in fields
+        self.fill_in_group_info(new_group_data)
+        self.submit_form_update()
+        self.return_to_groups_page()
+
+    def submit_form_update(self):
+        wd = self.app.wd
+        wd.find_element(By.NAME, "update").click()
+
+    def open_modification_form(self):
+        wd = self.app.wd
+        wd.find_element(By.NAME, "edit").click()
+
+    def select_first_group(self):
+        wd = self.app.wd
+        wd.find_element(By.NAME, "selected[]").click()
+
     def fill_in_group_info(self, group):
         wd = self.app.wd
-        wd.find_element(By.NAME, "group_name").click()
-        wd.find_element(By.NAME, "group_name").clear()
-        wd.find_element(By.NAME, "group_name").send_keys(group.name)
-        wd.find_element(By.NAME, "group_header").click()
-        wd.find_element(By.NAME, "group_header").clear()
-        wd.find_element(By.NAME, "group_header").send_keys(group.header)
-        wd.find_element(By.NAME, "group_footer").click()
-        wd.find_element(By.NAME, "group_footer").clear()
-        wd.find_element(By.NAME, "group_footer").send_keys(group.footer)
+        self.change_field_value("group_name", group.name)
+        self.change_field_value("group_header", group.header)
+        self.change_field_value("group_footer", group.footer)
+
+    def change_field_value(self, field_name, text):
+        wd = self.app.wd
+        if text is not None:
+            wd.find_element(By.NAME, field_name).click()
+            wd.find_element(By.NAME, field_name).clear()
+            wd.find_element(By.NAME, field_name).send_keys(text)
 
     def return_to_groups_page(self):
         wd = self.app.wd

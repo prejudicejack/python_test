@@ -19,6 +19,8 @@ class ContactHelper:
 
     def delete_first_contact(self):
         wd = self.app.wd
+        # open home page
+        wd.find_element(By.LINK_TEXT, "home").click()
         # select first contact
         wd.find_element(By.NAME, "selected[]").click()
         # submit deletion
@@ -27,6 +29,8 @@ class ContactHelper:
 
     def delete_contact_by_name(self, selected_contact):
         wd = self.app.wd
+        # open home page
+        wd.find_element(By.LINK_TEXT, "home").click()
         # select contact by First name and Last name
         self.select_contact_by_title(selected_contact)
         # submit deletion
@@ -35,6 +39,8 @@ class ContactHelper:
 
     def delete_all_contacts(self):
         wd = self.app.wd
+        # open home page
+        wd.find_element(By.LINK_TEXT, "home").click()
         # select all contacts
         wd.find_element(By.XPATH, "//form[@name='MainForm']/input[@onclick='MassSelection()']").click()
         # submit deletion
@@ -43,6 +49,8 @@ class ContactHelper:
 
     def edit_first_contact(self, contact):
         wd = self.app.wd
+        # open home page
+        wd.find_element(By.LINK_TEXT, "home").click()
         # modify first contact
         wd.find_element(By.XPATH, "//a/img[@title='Details']").click()
         wd.find_element(By.NAME, "modifiy").click()
