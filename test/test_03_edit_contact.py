@@ -3,6 +3,8 @@ from model.contact import Contact
 
 
 def test_edit_first_contact(app):
+    if app.contact.contact_count() == 0:
+        app.contact.create(Contact(first_name="name to modify"))
     app.contact.edit_first_contact(Contact(first_name="Ann",
                                            middlename="Rose",
                                            lastname="Maryland",

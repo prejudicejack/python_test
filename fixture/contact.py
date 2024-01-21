@@ -107,6 +107,17 @@ class ContactHelper:
             Select(wd.find_element(By.NAME, field_name)).select_by_visible_text(text)
             # wd.find_element(By.NAME, field_name).click()
 
+    def contact_count(self):
+        wd = self.app.wd
+        wd.find_element(By.LINK_TEXT, "home").click()
+        return len(wd.find_elements(By.NAME, "selected[]"))
+
+    def contact_by_title_count(self, first_name, lastname):
+        wd = self.app.wd
+        wd.find_element(By.LINK_TEXT, "home").click()
+        return len(wd.find_elements(By.XPATH,
+                                    "//input[@title='Select (" + first_name + " " + lastname + ")']"))
+
     def return_to_home_page(self):
         wd = self.app.wd
         wd.find_element(By.LINK_TEXT, "home page").click()

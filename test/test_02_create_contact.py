@@ -2,7 +2,7 @@
 from model.contact import Contact
 
 
-def test_create_contact(app):
+def test_create_contact_full(app):
     app.contact.create(Contact(first_name="Lucy",
                                middlename="Michelle",
                                lastname="Sunrise",
@@ -29,55 +29,23 @@ def test_create_contact(app):
                                notes="sun"))
 
 
-def test_create_contact2(app):
+def test_create_contact_half_filled(app):
     app.contact.create(Contact(first_name="Elsa",
                                middlename="Michelle",
                                lastname="Sunrise",
                                nickname="El",
-                               title="",
-                               company="",
-                               address="",
-                               home_phone="",
-                               mobile_phone="",
                                work_phone="123234",
-                               fax="",
                                email1="some@mail.com",
-                               email2="",
-                               email3="",
-                               homepage="",
                                birthday_day="10",
                                birthday_month="June",
                                birthday_year="1987",
                                anniversary_day="3",
                                anniversary_month="August",
-                               anniversary_year="2010",
-                               address2="",
-                               phone2="",
-                               notes=""))
+                               anniversary_year="2010"))
 
 
-def test_create_contact3(app):
-    app.contact.create(Contact(first_name="Test",
-                               middlename="MTest",
-                               lastname="Test",
-                               nickname="Test",
-                               title="",
-                               company="",
-                               address="",
-                               home_phone="",
-                               mobile_phone="",
-                               work_phone="",
-                               fax="",
-                               email1="",
-                               email2="",
-                               email3="",
-                               homepage="",
-                               birthday_day="-",
-                               birthday_month="-",
-                               birthday_year="",
-                               anniversary_day="-",
-                               anniversary_month="-",
-                               anniversary_year="",
-                               address2="",
-                               phone2="",
-                               notes=""))
+def test_create_contact_empty_name(app):
+    app.contact.create(Contact(first_name="",
+                               middlename="",
+                               lastname=""))
+
