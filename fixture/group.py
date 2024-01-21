@@ -115,3 +115,14 @@ class GroupHelper:
     def return_to_groups_page(self):
         wd = self.app.wd
         wd.find_element(By.LINK_TEXT, "group page").click()
+
+    def count(self):
+        wd = self.app.wd
+        self.open_groups_page()
+        return len(wd.find_elements(By.NAME, "selected[]"))
+
+    def group_by_title_count(self, selected_group):
+        wd = self.app.wd
+        self.open_groups_page()
+        return len(wd.find_elements(By.XPATH, "//div[@id='content']/form/span/input[@title='Select ("
+                                    + selected_group + ")']"))
