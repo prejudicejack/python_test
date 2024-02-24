@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from model.group import Group
 
+
 class GroupHelper:
 
     def __init__(self, app):
@@ -137,4 +138,3 @@ class GroupHelper:
             id = element.find_element(By.NAME, "selected[]").get_attribute("value")
             groups.append(Group(name=text, id=id))
         return groups
-

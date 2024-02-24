@@ -1,5 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+from model.contact import Contact
+import time
 
 
 class ContactHelper:
@@ -25,6 +27,7 @@ class ContactHelper:
         # submit deletion
         wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
         wd.switch_to.alert.accept()
+        time.sleep(3)
 
     def open_home_page(self):
         wd = self.app.wd
@@ -39,6 +42,7 @@ class ContactHelper:
         # submit deletion
         wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
         wd.switch_to.alert.accept()
+        time.sleep(3)
 
     def delete_all_contacts(self):
         wd = self.app.wd
@@ -48,6 +52,7 @@ class ContactHelper:
         # submit deletion
         wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
         wd.switch_to.alert.accept()
+        time.sleep(3)
 
     def edit_first_contact(self, contact):
         wd = self.app.wd
@@ -122,3 +127,15 @@ class ContactHelper:
     def return_to_home_page(self):
         wd = self.app.wd
         wd.find_element(By.LINK_TEXT, "home page").click()
+
+    def get_contacts_list(self):
+        wd = self.app.wd
+        self.open_home_page()
+        contacts = []
+        for element in wd.find_elements(By.XPATH,
+                                        "//form[@name='MainForm']/table[@id = 'maintable']/tbody/tr[@name='entry']"):
+            id = element.find_element(By.NAME, "selected[]").get_attribute("value")
+            first_name = element.find_element(By.XPATH, "td[3]").text
+            lastname = element.find_element(By.XPATH, "td[2]").text
+            contacts.append(Contact(lastname=lastname, first_name=first_name, id=id))
+        return contacts
