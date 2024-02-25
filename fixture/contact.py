@@ -11,37 +11,29 @@ class ContactHelper:
 
     def create(self, contact):
         wd = self.app.wd
-        # open new contact page
         wd.find_element(By.LINK_TEXT, "add new").click()
-        # fill in form
         self.fill_in_contact_info(contact)
-        # submit contact creation
         wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
         self.return_to_home_page()
         self.contact_cache = None
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
         self.open_home_page()
-        # select first contact
-        wd.find_element(By.NAME, "selected[]").click()
-        # submit deletion
+        self.select_contact_by_index(index)
         wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
         wd.switch_to.alert.accept()
         time.sleep(3)
         self.contact_cache = None
-
-    def open_home_page(self):
-        wd = self.app.wd
-        if not ((wd.current_url.endswith("/index.php")) or (wd.current_url.endswith("addressbook/"))):
-            wd.find_element(By.LINK_TEXT, "home").click()
 
     def delete_contact_by_name(self, selected_contact):
         wd = self.app.wd
         self.open_home_page()
         # select contact by First name and Last name
         self.select_contact_by_title(selected_contact)
-        # submit deletion
         wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
         wd.switch_to.alert.accept()
         time.sleep(3)
@@ -50,26 +42,27 @@ class ContactHelper:
     def delete_all_contacts(self):
         wd = self.app.wd
         self.open_home_page()
-        # select all contacts
         wd.find_element(By.XPATH, "//form[@name='MainForm']/input[@onclick='MassSelection()']").click()
-        # submit deletion
         wd.find_element(By.XPATH, "//div[@class='left']/input[@onclick='DeleteSel()']").click()
         wd.switch_to.alert.accept()
         time.sleep(3)
         self.contact_cache = None
 
     def edit_first_contact(self, contact):
+        self.edit_contact_by_index(0, contact)
+
+    def edit_contact_by_index(self, index, contact):
         wd = self.app.wd
         self.open_home_page()
-        # modify first contact
-        wd.find_element(By.XPATH, "//a/img[@title='Details']").click()
-        wd.find_element(By.NAME, "modifiy").click()
-        # fill in form
+        wd.find_elements(By.XPATH, "//a/img[@title='Edit']")[index].click()
         self.fill_in_contact_info(contact)
-        # submit contact updating
         wd.find_element(By.NAME, "update").click()
         self.return_to_home_page()
         self.contact_cache = None
+
+    def select_contact_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements(By.NAME, "selected[]")[index].click()
 
     def select_contact_by_title(self, selected_contact):
         wd = self.app.wd
@@ -128,6 +121,11 @@ class ContactHelper:
         wd.find_element(By.LINK_TEXT, "home").click()
         return len(wd.find_elements(By.XPATH,
                                     "//input[@title='Select (" + first_name + " " + lastname + ")']"))
+
+    def open_home_page(self):
+        wd = self.app.wd
+        if not ((wd.current_url.endswith("/index.php")) or (wd.current_url.endswith("addressbook/"))):
+            wd.find_element(By.LINK_TEXT, "home").click()
 
     def return_to_home_page(self):
         wd = self.app.wd
