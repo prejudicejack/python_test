@@ -25,9 +25,12 @@ class GroupHelper:
         self.group_cache = None
 
     def delete_first_group(self):
+        self.delete_group_by_index(0)
+
+    def delete_group_by_index(self, index):
         wd = self.app.wd
         self.open_groups_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         self.submit_group_deletion()
         self.return_to_groups_page()
         self.group_cache = None
@@ -52,10 +55,17 @@ class GroupHelper:
         wd = self.app.wd
         wd.find_element(By.NAME, "delete").click()
 
-    def edit_all_fields_in_first_group(self, group):
+    def open_modification_form(self):
+        wd = self.app.wd
+        wd.find_element(By.NAME, "edit").click()
+
+    def modify_first_group(self, group):
+        self.modify_group_by_index(0, group)
+
+    def modify_group_by_index(self, index, group):
         wd = self.app.wd
         self.open_groups_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         self.open_modification_form()
         # change data in fields
         self.fill_in_group_info(group)
@@ -74,6 +84,10 @@ class GroupHelper:
         self.return_to_groups_page()
         self.group_cache = None
 
+    def submit_form_update(self):
+        wd = self.app.wd
+        wd.find_element(By.NAME, "update").click()
+
     def select_group_by_title(self, selected_group):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//div[@id='content']/form/span/input[@title='Select ("
@@ -85,28 +99,13 @@ class GroupHelper:
         for checkbox in checkboxes:
             checkbox.click()
 
-    def modify_first_group(self, new_group_data):
-        wd = self.app.wd
-        self.open_groups_page()
-        self.select_first_group()
-        self.open_modification_form()
-        # change data in fields
-        self.fill_in_group_info(new_group_data)
-        self.submit_form_update()
-        self.return_to_groups_page()
-        self.group_cache = None
-
-    def submit_form_update(self):
-        wd = self.app.wd
-        wd.find_element(By.NAME, "update").click()
-
-    def open_modification_form(self):
-        wd = self.app.wd
-        wd.find_element(By.NAME, "edit").click()
-
     def select_first_group(self):
         wd = self.app.wd
         wd.find_element(By.NAME, "selected[]").click()
+
+    def select_group_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements(By.NAME, "selected[]")[index].click()
 
     def fill_in_group_info(self, group):
         wd = self.app.wd
