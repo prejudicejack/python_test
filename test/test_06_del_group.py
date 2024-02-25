@@ -8,8 +8,8 @@ def test_delete_first_group(app):
         app.group.create(Group(name="test"))
     old_groups = app.group.get_group_list()
     app.group.delete_first_group()
+    assert len(old_groups) - 1 == app.group.count()
     new_groups = app.group.get_group_list()
-    assert len(old_groups) - 1 == len(new_groups)
     old_groups[0:1] = []
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
 
@@ -33,7 +33,7 @@ def test_delete_all_groups(app):
     old_groups = app.group.get_group_list()
     max_index = len(old_groups)
     app.group.delete_all_groups()
+    assert (len(old_groups) > app.group.count() == 0)
     new_groups = app.group.get_group_list()
-    assert (len(old_groups) > len(new_groups) == 0)
     old_groups[0:max_index] = []
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
