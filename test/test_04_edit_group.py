@@ -31,17 +31,21 @@ def test_modify_some_group(app):
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
 
 
-# def test_edit_group_by_title(app):
-#     if app.group.group_by_title_count(selected_group="test_group") == 0:
-#         app.group.create(Group(name="test_group"))
-#     old_groups = app.group.get_group_list()
-#     group = Group(name="some name", header="some header", footer="some footer")
-#     group.id = old_groups[0].id
-#     app.group.edit_all_fields_in_group_selected_by_title(group, SelectGroupByName(name="test_group"))
-#     new_groups = app.group.get_group_list()
-#     assert len(old_groups) == len(new_groups)
-#     old_groups[0] = group
-#     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+def test_edit_group_by_title(app):
+    if app.group.group_by_title_count(selected_group="test_group") == 0:
+        app.group.create(Group(name="test_group"))
+    old_groups = app.group.get_group_list()
+    group = Group(name="some name", header="some header", footer="some footer")
+    test_group_index = []
+    for i in range(0, len(old_groups)):
+        if old_groups[i].name == 'test_group':
+            test_group_index.append(i)
+    group.id = old_groups[test_group_index[0]].id
+    app.group.edit_all_fields_in_group_selected_by_title(group, SelectGroupByName(name="test_group"))
+    new_groups = app.group.get_group_list()
+    assert len(old_groups) == len(new_groups)
+    old_groups[test_group_index[0]] = group
+    assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
 
 
 def test_modify_group_name(app):

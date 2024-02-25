@@ -27,16 +27,20 @@ def test_delete_some_group(app):
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
 
 
-# def test_delete_group_by_title(app):
-#     if app.group.group_by_title_count(selected_group="some name") == 0:
-#         app.group.create(Group(name="some name"))
-#     old_groups = app.group.get_group_list()
-#     max_index = len(old_groups)
-#     group = SelectGroupByName(name="some name")
-#     app.group.delete_group_by_title(group)
-#     new_groups = app.group.get_group_list()
-#     assert len(old_groups) - 1 == len(new_groups)
-#     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+def test_delete_group_by_title(app):
+    if app.group.group_by_title_count(selected_group="some name") == 0:
+        app.group.create(Group(name="some name"))
+    old_groups = app.group.get_group_list()
+    test_group_index = []
+    for i in range(0, len(old_groups)):
+        if old_groups[i].name == 'some name':
+            test_group_index.append(i)
+            break
+    app.group.delete_group_by_title(SelectGroupByName(name="some name"))
+    assert len(old_groups) - 1 == app.group.count()
+    new_groups = app.group.get_group_list()
+    old_groups[test_group_index[0]:test_group_index[0]+1] = []
+    assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
 
 
 def test_delete_all_groups(app):
