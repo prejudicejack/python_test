@@ -12,8 +12,8 @@ def test_create_contact_full(app):
                       anniversary_month="November",
                       anniversary_year="2000", address2="some street next", phone2="12", notes="sun")
     app.contact.create(contact)
+    assert len(old_contacts) + 1 == app.contact.contact_count()
     new_contacts = app.contact.get_contacts_list()
-    assert len(old_contacts) + 1 == len(new_contacts)
     old_contacts.append(contact)
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
 
@@ -24,8 +24,8 @@ def test_create_contact_half_filled(app):
                       email1="some@mail.com", birthday_day="10", birthday_month="June", birthday_year="1987",
                       anniversary_day="3", anniversary_month="August", anniversary_year="2010")
     app.contact.create(contact)
+    assert len(old_contacts) + 1 == app.contact.contact_count()
     new_contacts = app.contact.get_contacts_list()
-    assert len(old_contacts) + 1 == len(new_contacts)
     old_contacts.append(contact)
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
 
@@ -34,7 +34,7 @@ def test_create_contact_empty_name(app):
     old_contacts = app.contact.get_contacts_list()
     contact = Contact(first_name="", middlename="", lastname="")
     app.contact.create(contact)
+    assert len(old_contacts) + 1 == app.contact.contact_count()
     new_contacts = app.contact.get_contacts_list()
-    assert len(old_contacts) + 1 == len(new_contacts)
     old_contacts.append(contact)
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
