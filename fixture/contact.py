@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from model.contact import Contact
 import time
+import re
 
 
 class ContactHelper:
@@ -60,6 +61,29 @@ class ContactHelper:
         self.return_to_home_page()
         self.contact_cache = None
 
+    def open_contact_to_edit_by_index(self, index):
+        wd = self.app.wd
+        self.open_home_page()
+        wd.find_elements(By.XPATH, "//a/img[@title='Edit']")[index].click()
+
+    def open_contact_view_by_index(self, index):
+        wd = self.app.wd
+        self.open_home_page()
+        wd.find_elements(By.XPATH, "//a/img[@title='Details']")[index].click()
+
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_contact_to_edit_by_index(index)
+        first_name = wd.find_element(By.NAME, "firstname").get_attribute("value")
+        lastname = wd.find_element(By.NAME, "lastname").get_attribute("value")
+        id = wd.find_element(By.NAME, "id").get_attribute("value")
+        home_phone = wd.find_element(By.NAME, "home").get_attribute("value")
+        work_phone = wd.find_element(By.NAME, "work").get_attribute("value")
+        mobile_phone = wd.find_element(By.NAME, "mobile").get_attribute("value")
+        phone2 = wd.find_element(By.NAME, "phone2").get_attribute("value")
+        return Contact(first_name=first_name, lastname=lastname, id=id, home_phone=home_phone,
+                       mobile_phone=mobile_phone, work_phone=work_phone, phone2=phone2)
+
     def select_contact_by_index(self, index):
         wd = self.app.wd
         wd.find_elements(By.NAME, "selected[]")[index].click()
@@ -109,7 +133,6 @@ class ContactHelper:
         if text is not None:
             wd.find_element(By.NAME, field_name).click()
             Select(wd.find_element(By.NAME, field_name)).select_by_visible_text(text)
-            # wd.find_element(By.NAME, field_name).click()
 
     def contact_count(self):
         wd = self.app.wd
@@ -143,5 +166,19 @@ class ContactHelper:
                 id = element.find_element(By.NAME, "selected[]").get_attribute("value")
                 first_name = element.find_element(By.XPATH, "td[3]").text
                 lastname = element.find_element(By.XPATH, "td[2]").text
-                self.contact_cache.append(Contact(lastname=lastname, first_name=first_name, id=id))
+                all_phones = element.find_element(By.XPATH, "td[6]").text.splitlines()
+                self.contact_cache.append(Contact(lastname=lastname, first_name=first_name, id=id,
+                                                  home_phone=all_phones[0], mobile_phone=all_phones[1],
+                                                  work_phone=all_phones[2], phone2=all_phones[3]))
         return list(self.contact_cache)
+
+    def get_contacts_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_contact_view_by_index(index)
+        text = wd.find_element(By.ID, "content").text
+        home_phone = re.search("H: (.*)", text).group(1)
+        work_phone = re.search("W: (.*)", text).group(1)
+        mobile_phone = re.search("M: (.*)", text).group(1)
+        phone2 = re.search("P: (.*)", text).group(1)
+        return Contact(home_phone=home_phone,
+                       mobile_phone=mobile_phone, work_phone=work_phone, phone2=phone2)
