@@ -78,8 +78,8 @@ class ContactHelper:
         lastname = wd.find_element(By.NAME, "lastname").get_attribute("value")
         id = wd.find_element(By.NAME, "id").get_attribute("value")
         home_phone = wd.find_element(By.NAME, "home").get_attribute("value")
-        work_phone = wd.find_element(By.NAME, "work").get_attribute("value")
         mobile_phone = wd.find_element(By.NAME, "mobile").get_attribute("value")
+        work_phone = wd.find_element(By.NAME, "work").get_attribute("value")
         phone2 = wd.find_element(By.NAME, "phone2").get_attribute("value")
         return Contact(first_name=first_name, lastname=lastname, id=id, home_phone=home_phone,
                        mobile_phone=mobile_phone, work_phone=work_phone, phone2=phone2)
@@ -166,10 +166,9 @@ class ContactHelper:
                 id = element.find_element(By.NAME, "selected[]").get_attribute("value")
                 first_name = element.find_element(By.XPATH, "td[3]").text
                 lastname = element.find_element(By.XPATH, "td[2]").text
-                all_phones = element.find_element(By.XPATH, "td[6]").text.splitlines()
+                all_phones = element.find_element(By.XPATH, "td[6]").text
                 self.contact_cache.append(Contact(lastname=lastname, first_name=first_name, id=id,
-                                                  home_phone=all_phones[0], mobile_phone=all_phones[1],
-                                                  work_phone=all_phones[2], phone2=all_phones[3]))
+                                                  all_phones_from_homepage=all_phones))
         return list(self.contact_cache)
 
     def get_contacts_from_view_page(self, index):
