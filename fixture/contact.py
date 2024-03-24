@@ -70,6 +70,15 @@ class ContactHelper:
         self.return_to_home_page()
         self.contact_cache = None
 
+    def edit_contact_by_id(self, id, contact):
+        wd = self.app.wd
+        self.open_home_page()
+        wd.find_element(By.XPATH, "//*[@id='%s']/../..//*[@title='Edit']" % id).click()
+        self.fill_in_contact_info(contact)
+        wd.find_element(By.NAME, "update").click()
+        self.return_to_home_page()
+        self.contact_cache = None
+
     def open_contact_to_edit_by_index(self, index):
         wd = self.app.wd
         self.open_home_page()
