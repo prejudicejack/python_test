@@ -4,7 +4,7 @@ from model.group import Group
 import random
 
 
-def test_delete_first_group(app, db):
+def test_delete_first_group(app, db, check_ui):
     if len(db.get_group_list()) == 0:
         app.group.create(Group(name="test"))
     old_groups = db.get_group_list()
@@ -14,9 +14,11 @@ def test_delete_first_group(app, db):
     assert len(old_groups) - 1 == len(new_groups)
     old_groups.remove(group)
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_group_list(), key=Group.id_or_max)
 
 
-def test_delete_some_group(app, db):
+def test_delete_some_group(app, db, check_ui):
     if len(db.get_group_list()) == 0:
         app.group.create(Group(name="test"))
     old_groups = db.get_group_list()
@@ -26,9 +28,11 @@ def test_delete_some_group(app, db):
     assert len(old_groups) - 1 == len(new_groups)
     old_groups.remove(group)
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_group_list(), key=Group.id_or_max)
 
 
-def test_delete_group_by_title(app, db):
+def test_delete_group_by_title(app, db, check_ui):
     if app.group.group_by_title_count(selected_group="some name") == 0:
         app.group.create(Group(name="some name"))
     old_groups = db.get_group_list()
@@ -42,9 +46,11 @@ def test_delete_group_by_title(app, db):
     assert len(old_groups) - 1 == len(new_groups)
     old_groups[test_group_index[0]:test_group_index[0]+1] = []
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_group_list(), key=Group.id_or_max)
 
 
-def test_delete_all_groups(app, db):
+def test_delete_all_groups(app, db, check_ui):
     if len(db.get_group_list()) <= 1:
         app.group.create(Group(name="test"))
         app.group.create(Group(name="test2"))
@@ -55,3 +61,5 @@ def test_delete_all_groups(app, db):
     assert (len(old_groups) > len(new_groups) == 0)
     old_groups[0:max_index] = []
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_group_list(), key=Group.id_or_max)
