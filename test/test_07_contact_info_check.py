@@ -1,4 +1,5 @@
 import re
+from model.contact import Contact
 from random import randrange
 
 
@@ -17,16 +18,15 @@ def test_phones_on_contact_view_page(app):
     assert contact_from_view_page.phone2 == contact_from_edit_page.phone2
 
 
-def test_contact_info_check(app):
-    contacts = app.contact.get_contacts_list()
-    index = randrange(len(contacts))
-    contact_from_home_page = app.contact.get_contacts_list()[index]
-    contact_from_edit_page = app.contact.get_contact_info_from_edit_page(index)
-    assert contact_from_home_page.first_name == contact_from_edit_page.first_name
-    assert contact_from_home_page.lastname == contact_from_edit_page.lastname
-    assert contact_from_home_page.address == contact_from_edit_page.address
-    assert contact_from_home_page.all_phones_from_homepage == merge_phones_like_on_home_page(contact_from_edit_page)
-    assert contact_from_home_page.all_emails_from_homepage == merge_emails_like_on_home_page(contact_from_edit_page)
+def test_contact_info_check(app, db):
+    contact_from_db = sorted(db.get_contacts_list_like_on_home_page(), key=Contact.id_or_max)
+    contact_from_home_page = sorted(app.contact.get_contacts_list(), key=Contact.id_or_max)
+    for i in range(len(contact_from_db)):
+        assert contact_from_home_page[i].first_name == contact_from_db[i].first_name
+        assert contact_from_home_page[i].lastname == contact_from_db[i].lastname
+        assert contact_from_home_page[i].address.replace(' ', '') == contact_from_db[i].address.replace(' ', '')
+        assert contact_from_home_page[i].all_phones_from_homepage == merge_phones_like_on_home_page(contact_from_db[i])
+        assert contact_from_home_page[i].all_emails_from_homepage == merge_emails_like_on_home_page(contact_from_db[i])
 
 
 def clear(s):

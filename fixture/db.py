@@ -36,5 +36,20 @@ class DbFixture:
             cursor.close()
         return list
 
+    def get_contacts_list_like_on_home_page(self):
+        list = []
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute('select id, firstname, lastname, address, email, email2, email3, home, '
+                           'mobile, work, phone2 from addressbook where deprecated=\'0000-00-00 00:00:00\'')
+            for row in cursor:
+                (id, firstname, lastname, address, email, email2, email3, home, mobile, work, phone2) = row
+                list.append(
+                    Contact(id=str(id), first_name=firstname, lastname=lastname, address=address, email1=email,
+                            email2=email2, email3=email3, home_phone=home, mobile_phone=mobile, work_phone=work, phone2=phone2))
+        finally:
+            cursor.close()
+        return list
+
     def destroy(self):
         self.connection.close()
